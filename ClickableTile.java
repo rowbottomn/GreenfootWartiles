@@ -30,7 +30,14 @@ public class ClickableTile extends Tile
     {
         //super.act();
         click();
-        
+        if(active){
+           getImage().setTransparency((int)(127.+127.*Math.sin(timer.millisElapsed()))); 
+           //System.out.println("hey");
+        }
+        else{
+           getImage().setTransparency(0);  
+        }
+    
     }
     
     //handles all the code you want to run if we have a click event
@@ -39,6 +46,7 @@ public class ClickableTile extends Tile
         if(mouse != null){
             if(mouse.getButton()==1 && mouse.getClickCount() == 1&&mouse.getActor() == this&&timer.millisElapsed()>buttonCooldown){
               timer.mark();  
+              active = !active;
             }
             if(timer.millisElapsed() < buttonCooldown){
                 img = getImage();

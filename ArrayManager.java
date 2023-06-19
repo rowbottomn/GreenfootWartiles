@@ -8,22 +8,25 @@ public class ArrayManager
 {
     FileManager fm;
     
-       void fillArrayWithData(String fileName, int[][] arr){
+   int[][] fillArrayWithData(String fileName){
         fm = new FileManager();
         //load map file
         String input = fm.read(fileName);
         //System.out.println(input);
         String[] lines = input.split(";");
+        int[][] arr = new int[8][8];
         
-        for(int i = 0; i < arr.length;i++){
+        for(int i = 0; i < lines.length;i++){
             
             String[] tileStrings = lines[i].split(",");
 
-            for(int j = 0; j < arr[0].length; j++){
+            for(int j = 0; j < tileStrings.length; j++){
                 arr[i][j] = Integer.parseInt(tileStrings[j]);
+                System.out.print(arr[i][j]);
             }    
             
         }   
+        return arr;
     }
     
     int[][] fillArrayWithZeroes(int w, int h){

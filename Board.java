@@ -21,13 +21,15 @@ public class Board extends Actor
     int numH;
     World game;
     GreenfootImage[] tileImgs;
-    
+    int[] redHQ;
+    int[] blueHQ;
+
     public Board(int w, int h, GreenfootImage[] tImgs){
         numW = w;
         numH = h;
         tileImgs = tImgs;
         tiles = new Tile[numW][numH];
-        
+        setHQs();
     }
     
     public Board(int[][] tInts, GreenfootImage[] tImgs){
@@ -35,9 +37,8 @@ public class Board extends Actor
         numW = tileInts.length;
         numH = tileInts[0].length;
         tileImgs = tImgs;
-        
-        tiles = new Tile[numH][numH];
-                
+        tiles = new Tile[numW][numH];
+        setHQs();        
     }
     
     
@@ -64,11 +65,12 @@ public class Board extends Actor
            double tileH =tileImgs[0].getHeight();
            for(int i = 0; i < numW; i++){
                for(int j = 0;j< numH; j++){
-                   tiles[i][j] = new Tile(Greenfoot.getRandomNumber(5));
+                   tiles[i][j] = new Tile(Greenfoot.getRandomNumber(9));
                    //tiles[i][j].getImage().scale(50,50);
                    game.addObject(tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
                }
            }
+           setHQs();
     }
     
     void load(int[][] tileInts){
@@ -77,9 +79,41 @@ public class Board extends Actor
         for(int i = 0; i < numW; i++){
            for(int j = 0;j< numH; j++){
                tiles[i][j] = new Tile(tileInts[i][j]);
-               game.addObject(tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
+               game.addObject(tiles[i][j], (int)(((double)i+0.5)*tileImgs[0].getWidth()),(int)(((double)j+0.5)*tileH));
            }
         }
-        
+        setHQs();
+    }
+    
+    void setHQs(){
+       setHQs(0,0,numW, numH);
+    }
+    
+    void setHQs(int rx, int ry, int  bx, int by){
+       redHQ = new int[] {rx,ry};
+       blueHQ = new int[] {bx,by};
+       game.removeObject(tiles[rx][ry]);
+       game.removeObject(tiles[bx][by]);
+       tiles[rx][ry] = new Tile(9);
+       tiles[bx][by] = new Tile(9);
+       game.addObject(tiles[rx][ry],(int)(((double)rx+0.5)*tileImgs[0].getWidth()),(int)(((double)ry+0.5)*tileImgs[0].getHeight()));
+       game.addObject(tiles[bx][by],(int)(((double)bx+0.5)*tileImgs[0].getWidth()),(int)(((double)by+0.5)*tileImgs[0].getHeight()));
+    }
+    
+    
+    int[] getRedHQ(){
+        return redHQ;
+    }
+    
+    int[] getBlueHQ(){
+        return blueHQ;
+    }
+    
+    int[] getRedHQPos(){
+        return new int[]{(int)(((double)redHQ[0]+0.5)*tileImgs[0].getWidth()),(int)(((double)redHQ[1]+0.5)*tileImgs[0].getHeight())};
+    }
+    
+    int[] getBlueHQPos(){
+        return new int[]{(int)(((double)blueHQ[0]+0.5)*tileImgs[0].getWidth()),(int)(((double)blueHQ[1]+0.5)*tileImgs[0].getHeight())};
     }
 }

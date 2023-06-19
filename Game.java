@@ -15,7 +15,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Game extends World
 {
-    GreenfootImage[] tileImgs = new GreenfootImage[9];
+    TitleScreen title;
+    
+    GreenfootImage[] tileImgs = new GreenfootImage[10];
     Board board;
     Player[] players = new Player[2];
     Color[] playerColors = new Color[2];
@@ -23,6 +25,11 @@ public class Game extends World
     MapEditor mapEditor;
     FileManager fm;
     ArrayManager am;
+    
+    String fileName = "";
+    int tileW;
+    int tileH;
+    int[][] tileInts;
     
     /**
      * Constructor for objects of class MyWorld.
@@ -42,6 +49,7 @@ public class Game extends World
         tileImgs[6] = new GreenfootImage("road2.png");
         tileImgs[7] = new GreenfootImage("road3.png");
         tileImgs[8] = new GreenfootImage("road4.png");
+        tileImgs[9] = new GreenfootImage("HQ.png");
         //make fileManager to read in map files
         fm = new FileManager();
         am = new ArrayManager();
@@ -51,22 +59,47 @@ public class Game extends World
         addObject(board, -50,-50);
         
         //resize images
-        int tileW = getWidth()/board.numW;
-        int tileH = getHeight()/board.numH;
+        tileW = getWidth()/board.numW;
+        tileH = getHeight()/board.numH;
         
         for(int i = 0;i < tileImgs.length;i++){
             tileImgs[i].scale(tileW, tileH);
         }
         
-        mapEditor = new MapEditor(this, tileImgs);
-        Greenfoot.setWorld(mapEditor);
-        //fm.read("output.txt");
-        int[][] tileInts = new int[8][8];
-        am.fillArrayWithData("output.txt", tileInts);
-        board = new Board(tileInts, tileImgs);
+        tileInts = new int[8][8];
+        
+        title = new TitleScreen(this);
+                
+        setPaintOrder(Unit.class, Building.class,Player.class, Tile.class);
+        Greenfoot.setWorld(title);
+    }
+    
+    public void act(){
+      if(title.selection ==1 || title.selection == 2){
+        removeObjects(getObjects(null));
+        System.out.println(title.selection);
+        if(title.selection == 1){
+            fileName = "input0.txt";    
+            title.selection = 3;
+        }
+        else if (title.selection == 2){
+            mapEditor = new MapEditor(this, tileImgs);
+            Greenfoot.setWorld(mapEditor);
+            fileName = "output.txt";
+            title.selection = 3;
+            return;   
+        }
+      }
+      if(title.selection == 3){
+        
+        tileInts = am.fillArrayWithData(fileName);
+        board = new Board(tileInts, tileImgs);    
+        addObject(board,-50, -50);
+        int[] redHQ = board.getRedHQ();
+        int[] blueHQ = board.getBlueHQ();
         //make the players and add them to the world
-        players[0] = new Player(this, 4, 0);
-        players[1] = new Player(this, board.numW-3, board.numH-3);
+        players[0] = new Player(this, redHQ[0], redHQ[1]);
+        players[1] = new Player(this, blueHQ[0], blueHQ[1]);
         playerColors[0] = new Color(255,0,0,50);
         playerColors[1] = new Color(0,0,255,50);
         //set the hq for the players
@@ -81,6 +114,10 @@ public class Game extends World
         img1.fillRect(0,0, img1.getWidth(), img1.getHeight() );
         addObject(players[0], (int)((players[0].baseX + 0.5)*(double)tileW), (int)((players[0].baseY + 0.5)*(double)tileH));
         addObject(players[1], (int)((players[1].baseX + 0.5)*(double)tileW), (int)((players[1].baseY + 0.5)*(double)tileH));
-        setPaintOrder(Unit.class, Building.class,Player.class, Tile.class);
+        title.selection = 4;
+        System.out.println("number of objects "+getObjects(Board.class).size());
+      }   
     }
+    
+    
 }

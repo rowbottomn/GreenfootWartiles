@@ -31,7 +31,7 @@ public class MapEditor extends World
         fm = new FileManager();
         //board = new Board(game.board.numW,game.board.numH, true);
         int[][] tileInts = am.fillArrayWithZeroes(game.board.numW, game.board.numH);
-        am.fillArrayWithData("input.txt", tileInts);
+        tileInts = am.fillArrayWithData("input.txt");
         board = new ClickableBoard(tileInts, tImgs);
         addObject(board, -50,-50);
         

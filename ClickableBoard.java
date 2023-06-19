@@ -8,11 +8,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class ClickableBoard extends Board
 {
+    ClickableTile [][] tiles;
+    
     
     public ClickableBoard(int[][] tInts, GreenfootImage[] tImgs){
         super(tInts,tImgs);
         
-        tiles = new ClickableTile[numH][numH];
+        this.tiles = new ClickableTile[numH][numH];
                 
     }
        
@@ -22,9 +24,9 @@ public class ClickableBoard extends Board
            double tileH =tileImgs[0].getHeight();
            for(int i = 0; i < numW; i++){
                for(int j = 0;j< numH; j++){
-                   tiles[i][j] = new ClickableTile(Greenfoot.getRandomNumber(5), tileImgs);
+                   this.tiles[i][j] = new ClickableTile(Greenfoot.getRandomNumber(5), tileImgs);
                    //tiles[i][j].getImage().scale(50,50);
-                   game.addObject(tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
+                   game.addObject(this.tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
                }
            }
     }
@@ -34,8 +36,8 @@ public class ClickableBoard extends Board
         double tileH =tileImgs[0].getHeight();
         for(int i = 0; i < numW; i++){
            for(int j = 0;j< numH; j++){
-               tiles[i][j] = new ClickableTile(tileInts[i][j], tileImgs);
-               game.addObject(tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
+               this.tiles[i][j] = new ClickableTile(tileInts[i][j], tileImgs);
+               game.addObject(this.tiles[i][j], (int)(((double)i+0.5)*tileW),(int)(((double)j+0.5)*tileH));
            }
         }
         
